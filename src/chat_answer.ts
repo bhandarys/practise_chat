@@ -1,3 +1,4 @@
+import { tap } from 'rxjs/operators';
 import { getChat, updateChat } from './helper';
 
 // This is a chat app. It has 2 panes. The person on left and preson on right can chat with each other
@@ -16,7 +17,15 @@ function addElement(id: string, value1: string, value2: string) {
 }
 
 // Here chat is subscribed
-chat$.pipe(
+chat$.pipe(tap((chat) => {
+    // if(chat.name == "left") {
+    //     leftsent = getCurrentTime();
+    // } else {
+    //     rightsent = getCurrentTime();
+    // }
+    // // console.log("Inside tap - " + status + " " + leftupdated + " " + rightupdated);
+    // console.log(chat);
+})
     // TO DO
     // This is where you need to add your code
     // This is the only place in this file where you can add code
