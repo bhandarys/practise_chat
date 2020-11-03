@@ -1,3 +1,4 @@
+import { map, tap } from 'rxjs/operators';
 import { getChat, updateChat } from './helper';
 
 // This is a chat app. It has 2 panes. The person on left and preson on right can chat with each other
@@ -21,16 +22,33 @@ chat$.pipe(
     // This is where you need to add your code
     // This is the only place in this file where you can add code
     // Hint: RxJs Operators
-).subscribe((chat) => {
-    let content = "chatcontentleft"
-    if(chat.name == "left") {
-        content = "chatcontentright";
-        document.getElementById("rightupdated").innerHTML = leftsent;
-    } else {
-        document.getElementById("leftupdated").innerHTML = rightsent;
+
+    tap((chat) => {
+        console.log("tap called");
+        if(chat.name == "left") {
+            leftsent = getCurrentTime();
+        } else {
+            rightsent = getCurrentTime();
+        }
+    }), 
+    map((chat: any) => {
+        console.log("map called");
+        console.log(chat);
+        chat.time = getCurrentTime();
+        return chat;
+    })
+    ).subscribe((chat) => {
+        console.log("subscribe called");
+        let content = "chatcontentleft"
+        if(chat.name == "left") {
+            content = "chatcontentright";
+            document.getElementById("rightupdated").innerHTML = leftsent;
+        } else {
+            document.getElementById("leftupdated").innerHTML = rightsent;
+        }
+        addElement(content, chat.msg, chat.time);
     }
-    addElement(content, chat.msg, chat.time);
-});
+);
 
 // Handlig send click of the left user
 document.getElementById("leftsend").onclick = function () {
